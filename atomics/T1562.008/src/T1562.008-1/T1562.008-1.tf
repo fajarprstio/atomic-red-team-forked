@@ -31,5 +31,6 @@ resource "aws_s3_bucket_policy" "some_policy" {
 resource "aws_cloudtrail" "some_cloudtrail" {
   s3_bucket_name = aws_s3_bucket.some_bucket.id
   name           = var.cloudtrail_name
+  enable_log_file_validation = true
 }
 
