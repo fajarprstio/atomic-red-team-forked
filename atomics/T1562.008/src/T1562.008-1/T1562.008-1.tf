@@ -19,6 +19,19 @@ resource "aws_s3_bucket" "some_bucket" {
   force_destroy = true
 }
 
+
+resource "aws_s3_bucket" "some_bucket_log_bucket" {
+  bucket = "some_bucket-log-bucket"
+}
+
+resource "aws_s3_bucket_logging" "some_bucket" {
+  bucket = aws_s3_bucket.some_bucket.id
+
+  target_bucket = aws_s3_bucket.some_bucket_log_bucket.id
+  target_prefix = "log/"
+}
+
+
 resource "aws_s3_bucket_policy" "some_policy" {
   bucket = aws_s3_bucket.some_bucket.id
   policy = templatefile("policy.json", {
@@ -31,5 +44,6 @@ resource "aws_s3_bucket_policy" "some_policy" {
 resource "aws_cloudtrail" "some_cloudtrail" {
   s3_bucket_name = aws_s3_bucket.some_bucket.id
   name           = var.cloudtrail_name
+  enable_log_file_validation = true
+  is_multi_region_trail = true
 }
-
